@@ -1,18 +1,17 @@
 import spacy
 
-nlp = spacy.load("en")
+nlp = spacy.load("en_core_web_sm")
 
 
 def check_sent(sent):
-    aux = ["am", "is", "are", "was", "were", "have", "has", "had", "have been", "has been", "had been"]
     k = 0
     if sent[0].pos_ == "ADV":
         k = 1
     if sent[k].tag_ == "VB":
         return "This is a command sentence"
-    elif sent[k].tag_ == "VBP" and str(sent[k]).lower() not in aux:
+    elif sent[k].tag_ == "VBP" and sent[k].lemma_ != "be":
         if len(sent) > k + 1:
-            if sent[k + 1].dep_ != "n su bj":
+            if sent[k + 1].dep_ != "nsubj":
                 return "This is a command sentence"
             else:
                 return "other sentence"
@@ -22,5 +21,6 @@ def check_sent(sent):
         return "other sentence"
 
 
-s = nlp("dance like a clown")
+s = nlp("First Do it")
+
 print(check_sent(s))
