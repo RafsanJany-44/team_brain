@@ -1,26 +1,42 @@
-import spacy
+from flask import Flask, request
 
-nlp = spacy.load("en_core_web_sm")
+app = Flask(__name__)
 
 
-def check_sent(sent):
-    k = 0
-    if sent[0].pos_ == "ADV":
-        k = 1
-    if sent[k].tag_ == "VB":
-        return "This is a command sentence"
-    elif sent[k].tag_ == "VBP" and sent[k].lemma_ != "be":
-        if len(sent) > k + 1:
-            if sent[k + 1].dep_ != "nsubj":
-                return "This is a command sentence"
-            else:
-                return "other sentence"
+@app.route('/', methods=['GET', 'POST'])
+def getResponse():
+    if request.method == 'POST':
+        text = request.form['text']
+        user = request.form['user']
+        if user == '':
+            user = "unknown"
+        # todo some magic
+        response = text # function call
+
+        if response == 'command':
+            print("call micro")
+
+            # todo API call user and text
+
+            return "hi  " + user + " : "
+        elif response == "quary":
+            print("call another mocro")
+
+            # todo API call user and text
+
+            # API type = POST
+            # from body(query,username)
+
+            return "hi  " + user + " : "
         else:
-            return "This is a command sentence"
-    else:
-        return "other sentence"
+            return "My apology, I don't understand!"
+    elif request.method == 'GET':
+
+        return "Hi"
 
 
-s = nlp("First Do it")
+@app.route('/getRec', methods=['GET'])
+def getRecommandation():
+    return "some recommadation"
 
-print(check_sent(s))
+#lets make contribution
